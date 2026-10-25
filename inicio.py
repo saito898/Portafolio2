@@ -740,7 +740,7 @@ st.markdown(
 
 
 # ============================================================
-# SECCIÓN 01 — INTELIGENCIA ARTIFICIAL Y LENGUAJE
+# SECCIÓN 01 — INTELIGENCIA ARTIFICIAL Y LENGUAJE NATURAL
 # ============================================================
 
 section_header(
@@ -754,7 +754,7 @@ c1, c2 = st.columns(2, gap="medium")
 with c1:
     st.markdown(
         app_card(
-            "NLP · Procesamiento",
+            "Procesamiento de texto",
             "ChatPDF",
             "Una exploración de cómo los sistemas de inteligencia artificial "
             "analizan, comprenden y producen contenido en lenguaje natural.",
@@ -767,12 +767,12 @@ with c1:
 with c2:
     st.markdown(
         app_card(
-            "Computer Vision",
-            "Visión artificial",
+            "Análisis de imagenes",
+            "Procesamiento de imagenes",
             "Una aplicación que explora el reconocimiento visual mediante "
             "modelos capaces de interpretar imágenes y encontrar patrones.",
-            "https://visionapp-8whsafj8pj5hdiuow4yjyb.streamlit.app/",
-            "LLM2.PNG",
+            "https://vision-app1.streamlit.app/",
+            "ojotecnologico.webp",
         ),
         unsafe_allow_html=True,
     )
