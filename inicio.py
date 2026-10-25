@@ -794,12 +794,12 @@ c1, c2 = st.columns(2, gap="medium")
 with c1:
     st.markdown(
         app_card(
-            "Visión artificial · GPT",
+            "predicciones de números",
             "Tablero inteligente",
-            "Un espacio de dibujo en el que la inteligencia artificial "
-            "interpreta los trazos y ayuda a desarrollar o resolver ideas.",
-            "https://tablerotuneado-dqjtotfrqskiyeosh6youa.streamlit.app/",
-            "Tablero3.PNG",
+            "Un espacio de aula de clase "
+            "donde la ia predice el numero escrito en el tablero",
+            "https://prediccion-numeros.streamlit.app/",
+            "numeros.jpg",
         ),
         unsafe_allow_html=True,
     )
@@ -811,3 +811,106 @@ with c2:
             "Tablero matemático",
             "Escribe operaciones y ecuaciones a mano para obtener una "
             "interpretación y una explicación del procedimiento mediante LaTeX.",
+
+# Fila 2
+c1, c2 = st.columns(2, gap="medium")
+
+with c1:
+    st.markdown(
+        app_card(
+            "OCR · Reconocimiento",
+            "Reconocimiento de números",
+            "Convierte los números escritos a mano en información "
+            "digital mediante herramientas de reconocimiento visual.",
+            "https://tactilnumeros-kdpcwepxhzeer6zvu3cq6x.streamlit.app/",
+            "Tablero1.PNG",
+        ),
+        unsafe_allow_html=True,
+    )
+
+with c2:
+    st.markdown(
+        app_card(
+            "Dibujo · Creatividad",
+            "Lienzo interactivo",
+            "Un tablero digital para experimentar con trazos, herramientas "
+            "y diferentes colores en un entorno de creación libre.",
+            "https://tableropersonalizado-nkqwmc7lntrdxrnqmo7nl6.streamlit.app/",
+            "Tablero2.PNG",
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+# ============================================================
+# SECCIÓN 03 — INTERNET DE LAS COSAS
+# ============================================================
+
+section_header(
+    "03",
+    "Conexiones entre dispositivos",
+    "3 proyectos",
+)
+
+c1, c2, c3 = st.columns(3, gap="medium")
+
+with c1:
+    st.markdown(
+        app_card(
+            "Voz · Accesibilidad",
+            "Control por voz",
+            "Una experiencia de interacción que permite dar instrucciones "
+            "a través de la voz, reduciendo la necesidad de usar el teclado.",
+            "https://ctrlvoice-4zw5fqi5pmuizke4vdecw7.streamlit.app/",
+            "IOT3.PNG",
+        ),
+        unsafe_allow_html=True,
+    )
+
+with c2:
+    st.markdown(
+        app_card(
+            "Sensores · MQTT",
+            "De Wokwi a Streamlit",
+            "Un sensor simulado transmite información a una interfaz "
+            "digital mediante el protocolo de comunicación MQTT.",
+            "https://lectormqtt-t59niwifyecackdckk82fx.streamlit.app/",
+            "IOT1.PNG",
+        ),
+        unsafe_allow_html=True,
+    )
+
+with c3:
+    st.markdown(
+        app_card(
+            "Automatización · MQTT",
+            "De Streamlit a Wokwi",
+            "Una interfaz permite enviar instrucciones y controlar "
+            "dispositivos simulados a través de una conexión MQTT.",
+            "https://appawokwicmqtt-spyylhsrmng4sdf5fncrty.streamlit.app/",
+            "IOT2.PNG",
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+# ============================================================
+# PIE DE PÁGINA
+# ============================================================
+
+st.markdown(
+    """
+    <div class="footer">
+        <span class="footer-ornament">✿ ♡ ✿</span>
+
+        <p class="footer-text">
+            Ideas que florecen a través de la tecnología.
+        </p>
+
+        <p class="footer-sub">
+            Salomé Arango · EAFIT · Diseño Interactivo · 2026
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
