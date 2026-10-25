@@ -807,10 +807,11 @@ with c1:
 with c2:
     st.markdown(
         app_card(
-            "Matemáticas · GPT",
-            "Tablero matemático",
-            "Escribe operaciones y ecuaciones a mano para obtener una "
-            "interpretación y una explicación del procedimiento mediante LaTeX.",
+            "dibujo",
+            "diseño de modas digital",
+            "Diseña prendas unicas a tu estilo y para todos",
+             "https://tablerodemodas.streamlit.app/",
+            "moda.png",
 
 # Fila 2
 c1, c2 = st.columns(2, gap="medium")
@@ -818,12 +819,11 @@ c1, c2 = st.columns(2, gap="medium")
 with c1:
     st.markdown(
         app_card(
-            "OCR · Reconocimiento",
-            "Reconocimiento de números",
-            "Convierte los números escritos a mano en información "
-            "digital mediante herramientas de reconocimiento visual.",
-            "https://tactilnumeros-kdpcwepxhzeer6zvu3cq6x.streamlit.app/",
-            "Tablero1.PNG",
+            "vision + chatgpt",
+            "tablero inteligente",
+            "dibuja lo que te imagines y la ia lo interpretara",
+            "https://tablerointeligente.streamlit.app/",
+            "analisisia.jpg",
         ),
         unsafe_allow_html=True,
     )
@@ -833,10 +833,10 @@ with c2:
         app_card(
             "Dibujo · Creatividad",
             "Lienzo interactivo",
-            "Un tablero digital para experimentar con trazos, herramientas "
-            "y diferentes colores en un entorno de creación libre.",
-            "https://tableropersonalizado-nkqwmc7lntrdxrnqmo7nl6.streamlit.app/",
-            "Tablero2.PNG",
+            "Un lienzo donde puedes plasmar tus ideas "
+            "y la ia se encarga de crear una imagen con un estilo artistico.",
+            "https://tableroartistico.streamlit.app/",
+            "arte.jfif",
         ),
         unsafe_allow_html=True,
     )
@@ -860,9 +860,9 @@ with c1:
             "Voz · Accesibilidad",
             "Control por voz",
             "Una experiencia de interacción que permite dar instrucciones "
-            "a través de la voz, reduciendo la necesidad de usar el teclado.",
-            "https://ctrlvoice-4zw5fqi5pmuizke4vdecw7.streamlit.app/",
-            "IOT3.PNG",
+            "donde se habla por un dispositivo y envia la informacion a wokwi",
+            "https://control-devoz.streamlit.app/",
+            "voz.jpg",
         ),
         unsafe_allow_html=True,
     )
@@ -874,8 +874,8 @@ with c2:
             "De Wokwi a Streamlit",
             "Un sensor simulado transmite información a una interfaz "
             "digital mediante el protocolo de comunicación MQTT.",
-            "https://lectormqtt-t59niwifyecackdckk82fx.streamlit.app/",
-            "IOT1.PNG",
+            "https://receptorwokwi.streamlit.app/",
+            "MQTT.jpg",
         ),
         unsafe_allow_html=True,
     )
@@ -887,8 +887,8 @@ with c3:
             "De Streamlit a Wokwi",
             "Una interfaz permite enviar instrucciones y controlar "
             "dispositivos simulados a través de una conexión MQTT.",
-            "https://appawokwicmqtt-spyylhsrmng4sdf5fncrty.streamlit.app/",
-            "IOT2.PNG",
+            "https://enviarwokwi.streamlit.app/",
+            "mqtt.jfif",
         ),
         unsafe_allow_html=True,
     )
