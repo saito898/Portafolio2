@@ -755,11 +755,11 @@ with c1:
     st.markdown(
         app_card(
             "NLP · Procesamiento",
-            "Procesamiento de lenguaje",
+            "ChatPDF",
             "Una exploración de cómo los sistemas de inteligencia artificial "
             "analizan, comprenden y producen contenido en lenguaje natural.",
-            "https://procesamientolenguajejplg-dpcdtmrteadz4zxvzn8adh.streamlit.app/",
-            "LLM1.PNG",
+            "https://chatpdf-19.streamlit.app/",
+            "imagen.avif",
         ),
         unsafe_allow_html=True,
     )
