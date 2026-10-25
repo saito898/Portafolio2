@@ -642,7 +642,7 @@ col_left, col_right = st.columns(
 with col_left:
 
     with st.container(key="portrait_card"):
-        image_path = "yo.png"
+        image_path = "yo.jpeg"
 
         if os.path.exists(image_path):
             st.image(image_path, use_container_width=True)
