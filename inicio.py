@@ -811,6 +811,9 @@ with c2:
             "Diseña prendas unicas a tu estilo y para todos",
              "https://tablerodemodas.streamlit.app/",
             "moda.png",
+            ),
+             unsafe_allow_html=True,
+    )
 
 # Fila 2
 c1, c2 = st.columns(2, gap="medium")
