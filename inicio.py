@@ -1,716 +1,879 @@
 
 import streamlit as st
-import paho.mqtt.client as mqtt
-import json
-import time
+import base64
+import os
 import html
 
-# --------------------------------------------------
-# CONFIGURACIÓN
-# --------------------------------------------------
+# ============================================================
+# CONFIGURACIÓN GENERAL
+# ============================================================
 st.set_page_config(
-    page_title="SensorLab | Monitor MQTT",
-    page_icon="📡",
+    page_title="Salomé Arango | Portafolio Multimodales",
+    page_icon="🌸",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed",
 )
 
-# --------------------------------------------------
-# ESTILOS
-# --------------------------------------------------
+# ============================================================
+# ESTILOS — ROSÉ STUDIO
+# ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
-    --bg: #0b1020;
-    --panel: #131b2e;
-    --purple: #a78bfa;
-    --cyan: #67e8f9;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --border: rgba(148,163,184,0.17);
+    --bg: #fff9fb;
+    --white: #ffffff;
+    --surface: #fff0f5;
+    --surface-hover: #ffe3ed;
+    --pink: #d94f87;
+    --pink-dark: #a92f64;
+    --pink-light: #f6b6ce;
+    --pink-soft: #fde5ee;
+    --border: #f1d2df;
+    --border-strong: #e9a7c2;
+    --text: #38232e;
+    --text-secondary: #755663;
+    --muted: #9c7c8a;
+    --green: #628d76;
 }
 
-html, body, [class*="css"] {
+html, body, [class*="css"], .stApp, button, input, textarea, select {
     font-family: 'DM Sans', sans-serif !important;
 }
 
 .stApp {
     background:
-        radial-gradient(ellipse at 5% 0%, rgba(124,58,237,0.15), transparent 34%),
-        radial-gradient(ellipse at 95% 5%, rgba(6,182,212,0.10), transparent 30%),
-        var(--bg);
+        radial-gradient(ellipse at 0% 0%, rgba(246,182,206,0.20), transparent 35%),
+        radial-gradient(ellipse at 100% 50%, rgba(253,229,238,0.45), transparent 35%),
+        var(--bg) !important;
     color: var(--text);
+    background-attachment: fixed;
 }
 
-[data-testid="stHeader"] {
+#MainMenu, footer {
+    visibility: hidden;
+}
+
+header[data-testid="stHeader"] {
     background: transparent;
 }
 
-[data-testid="stSidebar"] {
-    background: #0e1628;
-    border-right: 1px solid var(--border);
-}
-
-[data-testid="stSidebar"] * {
-    color: var(--text);
-}
-
-[data-testid="stSidebar"] input {
-    background: #172238;
-    border: 1px solid #2a3855;
-    border-radius: 10px;
-}
-
 .block-container {
-    padding-top: 2.2rem;
-    padding-bottom: 3rem;
-    max-width: 1250px;
+    max-width: 1250px !important;
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
 }
 
-h1, h2, h3 {
-    font-family: 'Space Grotesk', sans-serif !important;
+/* TIPOGRAFÍA */
+h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif !important;
+    color: var(--text) !important;
+    font-weight: 400 !important;
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+/* PRESENTACIÓN PRINCIPAL */
+.hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--pink);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+}
+
+.hero-kicker::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: var(--pink);
+}
+
+.hero-h1 {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 4.2rem !important;
+    line-height: 1.08 !important;
+    font-weight: 400 !important;
+    letter-spacing: -0.04em !important;
+    margin: 0 0 1.5rem 0 !important;
     color: var(--text) !important;
 }
 
-.hero {
-    background: linear-gradient(120deg, #1b2440, #171d36 55%, #142b3b);
-    border: 1px solid rgba(167,139,250,0.25);
-    border-radius: 24px;
-    padding: 30px 32px;
-    margin-bottom: 26px;
+.hero-h1 em {
+    color: var(--pink);
+    font-weight: 400;
+    font-style: italic;
 }
 
-.eyebrow {
-    color: var(--cyan);
-    font-size: 0.76rem;
-    letter-spacing: 2.4px;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.hero-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 700;
-    line-height: 1.1;
-    color: white;
-    margin-bottom: 12px;
-}
-
-.hero-description {
-    color: #b4c0d5;
+.hero-desc {
+    font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
-    max-width: 680px;
-    line-height: 1.7;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    max-width: 570px;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
 }
 
-.section-label {
-    color: #c4b5fd;
-    font-size: 0.76rem;
+.hero-desc strong {
+    color: var(--text);
     font-weight: 700;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    margin: 14px 0 10px;
 }
 
-/* Tarjetas informativas */
-.info-card {
-    box-sizing: border-box;
-    background: linear-gradient(145deg, #172139, #111a2c);
+.part-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px;
-    min-height: 125px;
-    margin-bottom: 12px;
-    overflow: hidden;
-}
-
-.card-label {
-    font-size: 0.78rem;
-    color: #9aa9c2;
-    letter-spacing: 0.7px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    overflow-wrap: anywhere;
-}
-
-.card-value {
-    color: #67e8f9;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 600;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.45;
-}
-
-.card-hint {
-    color: #7f91ae;
-    font-size: 0.8rem;
-    margin-top: 8px;
-}
-
-.status-pill {
-    display: inline-block;
-    background: rgba(52,211,153,0.1);
-    color: #6ee7b7;
-    border: 1px solid rgba(52,211,153,0.25);
+    padding: 7px 15px 7px 8px;
     border-radius: 50px;
-    padding: 7px 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    color: var(--pink-dark);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.07em;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(169,47,100,0.04);
 }
 
-.status-idle {
-    display: inline-block;
-    background: rgba(148,163,184,0.09);
-    color: #cbd5e1;
-    border: 1px solid rgba(148,163,184,0.2);
-    border-radius: 50px;
-    padding: 7px 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-/* Tarjetas de lecturas */
-.sensor-card {
-    box-sizing: border-box;
-    width: 100%;
-    min-height: 145px;
-    height: 100%;
-    background: linear-gradient(145deg, #192541, #111a2c);
-    border: 1px solid rgba(103,232,249,0.2);
-    border-radius: 18px;
-    padding: 22px;
-    margin-bottom: 14px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    overflow: hidden;
-}
-
-.sensor-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(167,139,250,0.65);
-}
-
-.sensor-card-label {
-    color: #a5b4cc;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    overflow-wrap: anywhere;
-}
-
-.sensor-card-value {
-    color: #67e8f9;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: clamp(1.25rem, 2.2vw, 2rem);
-    font-weight: 700;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-.sensor-card-type {
-    color: #8192ad;
+.part-badge .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: var(--pink);
+    color: white;
     font-size: 0.75rem;
-    margin-top: 13px;
-}
-
-.empty-panel {
-    background: rgba(19,27,46,0.65);
-    border: 1px dashed rgba(148,163,184,0.3);
-    border-radius: 18px;
-    padding: 38px 20px;
-    text-align: center;
-    margin-top: 12px;
-}
-
-.empty-icon {
-    font-size: 2.8rem;
-    margin-bottom: 12px;
-}
-
-.empty-title {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.2rem;
-    color: #e2e8f0;
-    font-weight: 600;
-}
-
-.empty-text {
-    color: #94a3b8;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    line-height: 1.6;
-}
-
-.stButton > button {
-    background: linear-gradient(110deg, #8b5cf6, #6366f1);
-    color: white;
-    border: 1px solid rgba(196,181,253,0.3);
-    border-radius: 12px;
-    padding: 0.8rem 1.3rem;
     font-weight: 700;
-    min-height: 48px;
-    box-shadow: 0 6px 24px rgba(99,102,241,0.18);
-    transition: all 0.2s ease;
 }
 
-.stButton > button:hover {
-    border-color: #c4b5fd;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(139,92,246,0.25);
-}
-
-div[data-testid="stExpander"] {
-    background: rgba(19,27,46,0.75);
+/* NOTA DESTACADA */
+.hero-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-left: 4px solid var(--pink);
+    border-radius: 4px 14px 14px 4px;
+    padding: 17px 19px;
+    margin: 1.5rem 0;
+    max-width: 570px;
+    font-size: 0.88rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
 }
 
-div[data-testid="stExpander"] summary {
-    color: #e2e8f0;
+.hero-note .icon {
+    color: var(--pink);
+    font-size: 1.15rem;
+    flex-shrink: 0;
 }
 
-hr {
-    border-color: rgba(148,163,184,0.15);
+.hero-note b {
+    color: var(--pink-dark);
 }
 
-[data-testid="stAlert"] {
-    border-radius: 12px;
+/* ETIQUETAS */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 1.2rem;
 }
 
-[data-testid="stCaptionContainer"] {
-    color: #8494af;
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.85);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
 }
 
-.footer {
-    color: #64748b;
-    font-size: 0.8rem;
+.chip::before {
+    content: '✿';
+    color: var(--pink);
+    font-size: 0.75rem;
+}
+
+.chip strong {
+    color: var(--text);
+    font-weight: 700;
+}
+
+/* RETRATO */
+.st-key-portrait_card {
+    background: var(--white) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 180px 180px 22px 22px !important;
+    padding: 10px !important;
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    box-shadow: 0 20px 55px rgba(169,47,100,0.10) !important;
+}
+
+.st-key-portrait_card [data-testid="stImage"] {
+    width: 100% !important;
+    min-height: 500px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.st-key-portrait_card [data-testid="stImage"] > div {
+    width: 100% !important;
+}
+
+.st-key-portrait_card img {
+    width: 100% !important;
+    max-height: 520px !important;
+    object-fit: contain !important;
+    border-radius: 170px 170px 14px 14px !important;
+}
+
+.portrait-caption {
     text-align: center;
-    padding-top: 28px;
+    margin-top: 1.2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
 }
 
-@media (max-width: 700px) {
+.portrait-caption .star {
+    color: var(--pink);
+    margin: 0 9px;
+}
+
+/* ENCABEZADOS DE SECCIÓN */
+.section-head {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 17px;
+    margin: 4.5rem 0 2rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 43px;
+    height: 39px;
+    padding: 0 8px;
+    border-radius: 11px;
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.8rem !important;
+    margin: 0 !important;
+    color: var(--text) !important;
+    flex: 1;
+}
+
+.section-count {
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ============================================================
+   TARJETAS DE PROYECTOS — CORREGIDAS
+   ============================================================ */
+
+/* Evita que los contenedores de Streamlit alteren las tarjetas */
+div[data-testid="stMarkdownContainer"] {
+    overflow-wrap: anywhere;
+}
+
+.app-card,
+.app-card:link,
+.app-card:visited {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100%;
+    box-sizing: border-box !important;
+    background: var(--white) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 17px !important;
+    overflow: hidden !important;
+    color: var(--text) !important;
+    text-decoration: none !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease,
+                border-color 0.3s ease;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--pink-light) !important;
+    box-shadow: 0 16px 36px rgba(169,47,100,0.12);
+    color: var(--text) !important;
+    text-decoration: none !important;
+}
+
+.app-thumb {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 16 / 10 !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    background: #fff0f5 !important;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden !important;
+}
+
+.app-thumb img {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    z-index: 1 !important;
+    transition: transform 0.4s ease;
+}
+
+.app-card:hover .app-thumb img {
+    transform: scale(1.04);
+}
+
+.app-thumb::after {
+    content: '✿';
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--pink-light);
+    opacity: 0.9;
+    z-index: 0;
+}
+
+.app-body {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 22px !important;
+    background: var(--white) !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+}
+
+.app-kicker {
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.09em;
+    line-height: 1.6;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 11px;
+    overflow-wrap: anywhere;
+}
+
+.app-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 1.38rem !important;
+    line-height: 1.35 !important;
+    font-weight: 500 !important;
+    margin: 0 0 11px 0 !important;
+    padding: 0 !important;
+    color: var(--text) !important;
+    overflow-wrap: anywhere;
+}
+
+.app-desc {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.87rem;
+    line-height: 1.75;
+    color: var(--text-secondary);
+    margin: 0 0 22px 0 !important;
+    padding: 0 !important;
+    flex: 1 1 auto;
+    overflow-wrap: anywhere;
+}
+
+.app-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 9px;
+    margin-top: auto;
+    color: var(--pink-dark) !important;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: gap 0.25s ease;
+}
+
+.app-card:hover .app-link {
+    gap: 15px;
+}
+
+/* PIE DE PÁGINA */
+.footer {
+    text-align: center;
+    padding: 3rem 0 1rem;
+    margin-top: 5rem;
+    border-top: 1px solid var(--border);
+}
+
+.footer-ornament {
+    display: block;
+    color: var(--pink);
+    font-size: 1.5rem;
+    letter-spacing: 0.65rem;
+    margin-bottom: 1rem;
+}
+
+.footer-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--text);
+    margin-bottom: 0.7rem;
+}
+
+.footer-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ENLACES Y BARRA DE DESPLAZAMIENTO */
+.stMarkdown a {
+    text-decoration: none !important;
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--pink-light);
+    border-radius: 20px;
+    border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--pink);
+}
+
+/* DISEÑO ADAPTABLE */
+@media (max-width: 900px) {
+    .hero-h1 {
+        font-size: 2.8rem !important;
+    }
+
+    .section-title {
+        font-size: 1.35rem !important;
+    }
+
+    .section-count {
+        display: none;
+    }
+
+    .st-key-portrait_card {
+        min-height: 350px;
+        border-radius: 120px 120px 20px 20px !important;
+    }
+
+    .st-key-portrait_card [data-testid="stImage"] {
+        min-height: 330px;
+    }
+
+    .st-key-portrait_card img {
+        max-height: 350px !important;
+        border-radius: 110px 110px 12px 12px !important;
+    }
+
     .block-container {
-        padding: 1rem;
+        padding-top: 1.5rem !important;
     }
 
-    .hero {
-        padding: 23px 20px;
+    .app-body {
+        padding: 18px !important;
+    }
+}
+
+@media (max-width: 500px) {
+    .hero-h1 {
+        font-size: 2.4rem !important;
     }
 
-    .sensor-card {
-        padding: 17px;
+    .hero-desc {
+        font-size: 0.92rem;
+    }
+
+    .section-head {
+        gap: 10px;
+    }
+
+    .section-title {
+        font-size: 1.2rem !important;
+    }
+
+    .app-body {
+        padding: 16px !important;
     }
 }
 </style>
 """, unsafe_allow_html=True)
 
 
-# --------------------------------------------------
-# ESTADO DE LA APLICACIÓN
-# --------------------------------------------------
-if "sensor_data" not in st.session_state:
-    st.session_state.sensor_data = None
+# ============================================================
+# FUNCIONES AUXILIARES
+# ============================================================
 
-if "last_topic" not in st.session_state:
-    st.session_state.last_topic = None
+def get_image_base64(path):
+    """Convierte una imagen local en Base64 para mostrarla en HTML."""
+    if os.path.exists(path):
+        with open(path, "rb") as file:
+            data = base64.b64encode(file.read()).decode("utf-8")
 
-if "last_updated" not in st.session_state:
-    st.session_state.last_updated = None
+        extension = os.path.splitext(path)[1].lower()
 
-
-# --------------------------------------------------
-# FUNCIÓN MQTT
-# --------------------------------------------------
-def get_mqtt_message(broker, port, topic, client_id):
-    """Recibe el primer mensaje disponible en un tópico MQTT."""
-    message_received = {"received": False, "payload": None}
-    client = None
-
-    def on_message(client, userdata, message):
-        try:
-            decoded = message.payload.decode("utf-8")
-
-            try:
-                payload = json.loads(decoded)
-            except json.JSONDecodeError:
-                payload = decoded
-
-            message_received["payload"] = payload
-            message_received["received"] = True
-
-        except Exception as error:
-            message_received["payload"] = {
-                "error": f"No se pudo interpretar el mensaje: {error}"
-            }
-            message_received["received"] = True
-
-    try:
-        try:
-            client = mqtt.Client(
-                callback_api_version=mqtt.CallbackAPIVersion.VERSION1,
-                client_id=client_id
-            )
-        except (AttributeError, TypeError):
-            client = mqtt.Client(client_id=client_id)
-
-        client.on_message = on_message
-        client.connect(broker, int(port), 60)
-        client.subscribe(topic)
-        client.loop_start()
-
-        timeout = time.time() + 5
-
-        while not message_received["received"] and time.time() < timeout:
-            time.sleep(0.1)
-
-        if message_received["received"]:
-            return message_received["payload"]
-
-        return {
-            "error": (
-                "No se recibió ningún mensaje durante 5 segundos. "
-                "Verifica que el sensor esté publicando en este tópico."
-            )
+        mime_types = {
+            ".png": "image/png",
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".webp": "image/webp",
+            ".avif": "image/avif",
+            ".jfif": "image/jpeg",
         }
 
-    except Exception as error:
-        return {"error": str(error)}
+        mime_type = mime_types.get(extension, "image/png")
+        return f"data:{mime_type};base64,{data}"
 
-    finally:
-        if client is not None:
-            try:
-                client.loop_stop()
-                client.disconnect()
-            except Exception:
-                pass
+    return ""
 
 
-# --------------------------------------------------
-# FUNCIONES PARA MOSTRAR TARJETAS
-# --------------------------------------------------
-def format_value(value):
-    """Convierte cualquier valor recibido en texto legible."""
-    if isinstance(value, (dict, list)):
-        return json.dumps(value, ensure_ascii=False, indent=2)
-
-    if value is None:
-        return "Sin dato"
-
-    return str(value)
-
-
-def sensor_card(label, value):
-    """Crea una tarjeta HTML visual, no un bloque de código."""
-    safe_label = html.escape(str(label))
-    safe_value = html.escape(format_value(value))
-
-    # Los saltos de línea se conservan sin usar st.code.
-    safe_value = safe_value.replace("\n", "<br>")
-
+def section_header(num, title, count):
+    """Crea el encabezado visual de cada categoría."""
     st.markdown(
         f"""
-        <div class="sensor-card">
-            <div class="sensor-card-label">{safe_label}</div>
-            <div class="sensor-card-value">{safe_value}</div>
-            <div class="sensor-card-type">LECTURA RECIBIDA</div>
+        <div class="section-head">
+            <span class="section-num">{num}</span>
+            <h2 class="section-title">{html.escape(title)}</h2>
+            <span class="section-count">{html.escape(count)}</span>
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
 
-def info_card(label, value, hint=""):
-    """Crea las tarjetas superiores de información."""
-    safe_label = html.escape(str(label))
-    safe_value = html.escape(str(value))
-    safe_hint = html.escape(str(hint))
+def app_card(kicker, title, desc, url, image_path):
+    """Construye una tarjeta visual con imagen y enlace."""
 
-    st.markdown(
-        f"""
-        <div class="info-card">
-            <div class="card-label">{safe_label}</div>
-            <div class="card-value" style="font-size:1.05rem;">
-                {safe_value}
-            </div>
-            <div class="card-hint">{safe_hint}</div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    safe_kicker = html.escape(kicker)
+    safe_title = html.escape(title)
+    safe_desc = html.escape(desc)
+    safe_url = html.escape(url, quote=True)
 
+    b64_img = get_image_base64(image_path)
 
-# --------------------------------------------------
-# BARRA LATERAL
-# --------------------------------------------------
-with st.sidebar:
-    st.markdown("""
-    <div style="padding:12px 0 22px 0;">
-        <div style="font-size:2.3rem;">📡</div>
-        <div style="font-family:'Space Grotesk',sans-serif;
-                    font-size:1.4rem;font-weight:700;color:white;">
-            Sensor<span style="color:#a78bfa;">Lab</span>
-        </div>
-        <div style="font-size:0.8rem;color:#8494af;">
-            MONITOREO DE SENSORES
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.divider()
-
-    st.markdown(
-        '<div class="section-label">Conexión MQTT</div>',
-        unsafe_allow_html=True
-    )
-
-    broker = st.text_input(
-        "Servidor / Broker",
-        value="broker.mqttdashboard.com",
-        help="Dirección del broker MQTT"
-    )
-
-    port = st.number_input(
-        "Puerto",
-        value=1883,
-        min_value=1,
-        max_value=65535,
-        step=1,
-        help="El puerto más habitual es 1883"
-    )
-
-    topic = st.text_input(
-        "Tópico del sensor",
-        value="Sensor/THP2",
-        help="Canal MQTT del que quieres recibir información"
-    )
-
-    client_id = st.text_input(
-        "ID del cliente",
-        value="streamlit_client",
-        help="Identificador para esta conexión"
-    )
-
-    st.markdown("---")
-
-    st.markdown("""
-    <div style="font-size:0.8rem;color:#8494af;line-height:1.7;">
-        <span style="color:#67e8f9;">●</span>
-        Configura el broker y consulta el mensaje disponible en el tópico.
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# --------------------------------------------------
-# ENCABEZADO
-# --------------------------------------------------
-st.markdown("""
-<div class="hero">
-    <div class="eyebrow">◈ INTERNET DE LAS COSAS · IoT</div>
-    <div class="hero-title">Monitor de sensores</div>
-    <div class="hero-description">
-        Visualiza los datos transmitidos por tus dispositivos mediante MQTT.
-        Conecta con tu broker y consulta las lecturas de tus sensores
-        desde un solo lugar.
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-
-# --------------------------------------------------
-# TARJETAS DE CONEXIÓN
-# --------------------------------------------------
-col_broker, col_topic, col_status = st.columns([1.2, 1.2, 0.8])
-
-with col_broker:
-    info_card("◉ Broker configurado", broker, f"Puerto {int(port)}")
-
-with col_topic:
-    info_card("⌁ Tópico seleccionado", topic, "Canal de recepción MQTT")
-
-with col_status:
-    if st.session_state.last_updated:
-        st.markdown(f"""
-        <div class="info-card">
-            <div class="card-label">Estado</div>
-            <span class="status-pill">● Datos recibidos</span>
-            <div class="card-hint">
-                Consulta: {html.escape(st.session_state.last_updated)}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+    if b64_img:
+        img_tag = (
+            f'<img src="{b64_img}" alt="{safe_title}" '
+            f'loading="lazy">'
+        )
     else:
-        st.markdown("""
-        <div class="info-card">
-            <div class="card-label">Estado</div>
-            <span class="status-idle">● En espera</span>
-            <div class="card-hint">Pendiente de consulta</div>
-        </div>
-        """, unsafe_allow_html=True)
+        img_tag = ""
+
+    # HTML sin indentación inicial para evitar problemas de renderizado.
+    return (
+        f'<a href="{safe_url}" target="_blank" '
+        f'rel="noopener noreferrer" class="app-card">'
+        f'<div class="app-thumb">{img_tag}</div>'
+        f'<div class="app-body">'
+        f'<span class="app-kicker">{safe_kicker}</span>'
+        f'<h3 class="app-title">{safe_title}</h3>'
+        f'<p class="app-desc">{safe_desc}</p>'
+        f'<span class="app-link">Explorar proyecto <span>↗</span></span>'
+        f'</div>'
+        f'</a>'
+    )
 
 
-# --------------------------------------------------
-# BOTÓN DE CONSULTA
-# --------------------------------------------------
-st.markdown(
-    '<div class="section-label">CONSULTA DE DATOS</div>',
-    unsafe_allow_html=True
+def render_app_card(kicker, title, desc, url, image_path):
+    """Renderiza la tarjeta como HTML, sin convertirla en código."""
+    card_html = app_card(kicker, title, desc, url, image_path)
+    st.markdown(card_html, unsafe_allow_html=True)
+
+
+# ============================================================
+# PRESENTACIÓN PRINCIPAL
+# ============================================================
+
+col_left, col_right = st.columns(
+    [1.05, 1.3],
+    gap="large",
+    vertical_alignment="center",
 )
 
-left, center, right = st.columns([1, 1.5, 1])
+with col_left:
+    with st.container(key="portrait_card"):
+        image_path = "yo.jpeg"
 
-with center:
-    consultar = st.button(
-        "↻  Obtener datos del sensor",
-        use_container_width=True
-    )
-
-if consultar:
-    if not broker.strip() or not topic.strip() or not client_id.strip():
-        st.warning("Completa el broker, el tópico y el ID del cliente.")
-    else:
-        with st.spinner("Conectando al broker MQTT y esperando el mensaje..."):
-            result = get_mqtt_message(
-                broker.strip(),
-                int(port),
-                topic.strip(),
-                client_id.strip()
+        if os.path.exists(image_path):
+            st.image(image_path, use_container_width=True)
+        else:
+            st.markdown(
+                """
+                <div style="
+                    min-height:480px;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:5rem;
+                    color:#d94f87;
+                ">
+                    ✿
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
 
-        st.session_state.sensor_data = result
-        st.session_state.last_topic = topic.strip()
-
-        if not (isinstance(result, dict) and "error" in result):
-            st.session_state.last_updated = time.strftime("%H:%M:%S")
-        else:
-            st.session_state.last_updated = None
-
-
-# --------------------------------------------------
-# RESULTADOS
-# --------------------------------------------------
-st.markdown("---")
-
-st.markdown(
-    '<div class="section-label">LECTURAS DEL DISPOSITIVO</div>',
-    unsafe_allow_html=True
-)
-
-st.markdown("## 📊 Datos del sensor")
-
-data = st.session_state.sensor_data
-
-if data is None:
-    st.markdown("""
-    <div class="empty-panel">
-        <div class="empty-icon">📡</div>
-        <div class="empty-title">Tu panel está listo</div>
-        <div class="empty-text">
-            Configura la conexión en el menú lateral y pulsa
-            <b>Obtener datos del sensor</b> para consultar el primer mensaje.
+    st.markdown(
+        """
+        <div class="portrait-caption">
+            Salomé Arango
+            <span class="star">✿</span>
+            Portafolio 2026
         </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-elif isinstance(data, dict) and "error" in data:
-    st.error(f"⚠️ No fue posible obtener los datos: {data['error']}")
-    st.caption(
-        "Comprueba el broker, el puerto, el tópico y que el sensor esté publicando."
+        """,
+        unsafe_allow_html=True,
     )
 
-else:
-    if st.session_state.last_updated:
-        st.caption(
-            f"Última consulta: {st.session_state.last_updated} "
-            f"· Tópico: {st.session_state.last_topic}"
-        )
 
-    st.success("Mensaje recibido correctamente")
+with col_right:
+    st.markdown(
+        """
+        <div class="part-badge">
+            <span class="num">02</span>
+            <span>Segunda entrega · 2026</span>
+        </div>
 
-    # JSON: cada campo se muestra como una tarjeta visual.
-    if isinstance(data, dict):
-        if not data:
-            st.info("El mensaje recibido contiene un objeto JSON vacío.")
-        else:
-            items = list(data.items())
+        <div class="hero-kicker">
+            Interfaces Multimodales
+        </div>
 
-            # Máximo tres tarjetas por fila.
-            for start in range(0, len(items), 3):
-                row_items = items[start:start + 3]
-                columns = st.columns(3)
+        <h1 class="hero-h1">
+            Hola, soy<br>
+            <em>Salomé Arango.</em>
+        </h1>
 
-                for column, (key, value) in zip(columns, row_items):
-                    with column:
-                        sensor_card(key, value)
+        <p class="hero-desc">
+            Soy estudiante de <strong>Diseño Interactivo</strong>
+            en <strong>EAFIT</strong>, interesada en explorar nuevas
+            formas de conectar a las personas con la tecnología.
+            En esta segunda entrega de mi portafolio de
+            <strong>Interfaces Multimodales</strong>, presento una
+            selección de los trabajos desarrollados durante el
+            semestre, desde experiencias basadas en inteligencia
+            artificial hasta propuestas que integran dispositivos
+            físicos y visión por computadora.
+        </p>
 
-        # El JSON completo solo aparece si el usuario lo solicita.
-        with st.expander("⌘  Ver mensaje JSON completo"):
-            st.json(data)
-
-    # Si llega una lista, cada elemento tiene su tarjeta.
-    elif isinstance(data, list):
-        if not data:
-            st.info("El mensaje recibido contiene una lista vacía.")
-        else:
-            for start in range(0, len(data), 3):
-                row_items = data[start:start + 3]
-                columns = st.columns(3)
-
-                for index, value in enumerate(row_items):
-                    with columns[index]:
-                        sensor_card(f"Elemento {start + index + 1}", value)
-
-        with st.expander("⌘  Ver mensaje JSON completo"):
-            st.json(data)
-
-    # Si el mensaje es texto simple, también se presenta como tarjeta.
-    else:
-        sensor_card("Mensaje recibido", data)
+        <div class="hero-note">
+            <span class="icon">✿</span>
+            <span>
+                Una recopilación de experimentos, aprendizajes y
+                soluciones interactivas que exploran cómo el lenguaje,
+                las imágenes, el tacto y otros medios pueden ampliar
+                nuestra manera de interactuar con los sistemas digitales.
+            </span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
-# --------------------------------------------------
-# AYUDA
-# --------------------------------------------------
-with st.expander("ℹ️  Ayuda y solución de problemas"):
-    st.markdown("""
-    **¿Cómo funciona?**
-
-    1. Introduce el servidor y el puerto del broker MQTT.
-    2. Escribe el tópico donde publica tu sensor.
-    3. Asigna un ID de cliente.
-    4. Pulsa **Obtener datos del sensor**.
-    5. Si llega un mensaje, sus campos aparecerán en tarjetas.
-
-    **Brokers públicos para pruebas**
-    - `broker.mqttdashboard.com`
-    - `test.mosquitto.org`
-    - `broker.hivemq.com`
-
-    **Si no llegan datos**
-    - Confirma que el sensor esté encendido y publicando.
-    - Verifica que el tópico coincida exactamente, incluidas las mayúsculas.
-    - Comprueba el broker y el puerto.
-    - Los brokers públicos pueden tener restricciones o estar temporalmente fuera de servicio.
-
-    **Importante:** la aplicación espera un mensaje durante un máximo de
-    cinco segundos cada vez que pulsas el botón. No mantiene una suscripción
-    permanente en segundo plano.
-    """)
+st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
 
-# --------------------------------------------------
+# ============================================================
+# SECCIÓN 01 — INTELIGENCIA ARTIFICIAL Y LENGUAJE NATURAL
+# ============================================================
+
+section_header("01", "Lenguaje e inteligencia artificial", "2 proyectos")
+
+c1, c2 = st.columns(2, gap="medium")
+
+with c1:
+    render_app_card(
+        "Procesamiento de texto",
+        "ChatPDF",
+        "Una exploración de cómo los sistemas de inteligencia artificial "
+        "analizan, comprenden y producen contenido en lenguaje natural.",
+        "https://chatpdf-19.streamlit.app/",
+        "imagen.avif",
+    )
+
+with c2:
+    render_app_card(
+        "Análisis de imágenes",
+        "Procesamiento de imágenes",
+        "Una aplicación que explora el reconocimiento visual mediante "
+        "modelos capaces de interpretar imágenes y encontrar patrones.",
+        "https://vision-app1.streamlit.app/",
+        "ojotecnologico.webp",
+    )
+
+
+# ============================================================
+# SECCIÓN 02 — EXPERIENCIAS TÁCTILES
+# ============================================================
+
+section_header("02", "Experiencias de interacción táctil", "4 proyectos")
+
+# Fila 1
+c1, c2 = st.columns(2, gap="medium")
+
+with c1:
+    render_app_card(
+        "Predicciones de números",
+        "Tablero inteligente",
+        "Un espacio de aula de clase donde la IA predice el número "
+        "escrito en el tablero.",
+        "https://prediccion-numeros.streamlit.app/",
+        "numeros.jpg",
+    )
+
+with c2:
+    render_app_card(
+        "Dibujo",
+        "Diseño de modas digital",
+        "Diseña prendas únicas a tu estilo y para todos.",
+        "https://tablerodemodas.streamlit.app/",
+        "moda.png",
+    )
+
+# Fila 2
+c1, c2 = st.columns(2, gap="medium")
+
+with c1:
+    render_app_card(
+        "Visión + ChatGPT",
+        "Tablero inteligente",
+        "Dibuja lo que te imagines y la IA lo interpretará.",
+        "https://tablerointeligente.streamlit.app/",
+        "analisisia.jpg",
+    )
+
+with c2:
+    render_app_card(
+        "Dibujo · Creatividad",
+        "Lienzo interactivo",
+        "Un lienzo donde puedes plasmar tus ideas y la IA se encarga "
+        "de crear una imagen con un estilo artístico.",
+        "https://tableroartistico.streamlit.app/",
+        "arte.jfif",
+    )
+
+
+# ============================================================
+# SECCIÓN 03 — INTERNET DE LAS COSAS
+# ============================================================
+
+section_header("03", "Conexiones entre dispositivos", "3 proyectos")
+
+c1, c2, c3 = st.columns(3, gap="medium")
+
+with c1:
+    render_app_card(
+        "Voz · Accesibilidad",
+        "Control por voz",
+        "Una experiencia de interacción que permite dar instrucciones "
+        "por voz y enviar la información a Wokwi.",
+        "https://control-devoz.streamlit.app/",
+        "voz.jpg",
+    )
+
+with c2:
+    render_app_card(
+        "Sensores · MQTT",
+        "De Wokwi a Streamlit",
+        "Un sensor simulado transmite información a una interfaz "
+        "digital mediante el protocolo de comunicación MQTT.",
+        "https://receptorwokwi.streamlit.app/",
+        "MQTT.jpg",
+    )
+
+with c3:
+    render_app_card(
+        "Automatización · MQTT",
+        "De Streamlit a Wokwi",
+        "Una interfaz permite enviar instrucciones y controlar "
+        "dispositivos simulados a través de una conexión MQTT.",
+        "https://enviarwokwi.streamlit.app/",
+        "mqtt.jfif",
+    )
+
+
+# ============================================================
 # PIE DE PÁGINA
-# --------------------------------------------------
-st.markdown("""
-<div class="footer">
-    SENSORLAB · MQTT MONITOR &nbsp;•&nbsp; POWERED BY STREAMLIT
-</div>
-""", unsafe_allow_html=True)
+# ============================================================
+
+st.markdown(
+    """
+    <div class="footer">
+        <span class="footer-ornament">✿ ♡ ✿</span>
+
+        <p class="footer-text">
+            Ideas que florecen a través de la tecnología.
+        </p>
+
+        <p class="footer-sub">
+            Salomé Arango · EAFIT · Diseño Interactivo · 2026
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
