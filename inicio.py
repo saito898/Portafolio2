@@ -1,4 +1,4 @@
-
+```python
 import streamlit as st
 import base64
 import os
@@ -19,7 +19,7 @@ st.set_page_config(
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=DM+Sans:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
     --bg: #fff9fb;
@@ -38,8 +38,13 @@ st.markdown("""
     --green: #628d76;
 }
 
-html, body, [class*="css"], .stApp, button, input, textarea, select {
-    font-family: 'DM Sans', sans-serif !important;
+/* ============================================================
+   TIPOGRAFÍA GENERAL
+   ============================================================ */
+
+html, body, [class*="css"], .stApp,
+button, input, textarea, select {
+    font-family: 'Nunito', sans-serif !important;
 }
 
 .stApp {
@@ -65,18 +70,20 @@ header[data-testid="stHeader"] {
     padding-bottom: 3rem !important;
 }
 
-/* TIPOGRAFÍA */
+/* ============================================================
+   TÍTULOS CON DELICIOUS HANDRAWN
+   ============================================================ */
+
 h1, h2, h3, h4, h5 {
-    font-family: 'Playfair Display', serif !important;
+    font-family: 'Delicious Handrawn', cursive !important;
     color: var(--text) !important;
     font-weight: 400 !important;
 }
 
-p {
-    color: var(--text-secondary);
-}
+/* ============================================================
+   PRESENTACIÓN PRINCIPAL
+   ============================================================ */
 
-/* PRESENTACIÓN PRINCIPAL */
 .hero-kicker {
     display: inline-flex;
     align-items: center;
@@ -98,34 +105,20 @@ p {
 }
 
 .hero-h1 {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 4.2rem !important;
-    line-height: 1.08 !important;
+    font-family: 'Delicious Handrawn', cursive !important;
+    font-size: 5rem !important;
+    line-height: 1.12 !important;
     font-weight: 400 !important;
-    letter-spacing: -0.04em !important;
+    letter-spacing: 0 !important;
     margin: 0 0 1.5rem 0 !important;
     color: var(--text) !important;
 }
 
 .hero-h1 em {
     color: var(--pink);
+    font-family: 'Delicious Handrawn', cursive !important;
     font-weight: 400;
-    font-style: italic;
-}
-
-.hero-desc {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    line-height: 1.9;
-    color: var(--text-secondary);
-    max-width: 570px;
-    margin-bottom: 1.5rem;
-    font-weight: 400;
-}
-
-.hero-desc strong {
-    color: var(--text);
-    font-weight: 700;
+    font-style: normal;
 }
 
 .part-badge {
@@ -157,7 +150,10 @@ p {
     font-weight: 700;
 }
 
-/* NOTA DESTACADA */
+/* ============================================================
+   NOTA DESTACADA
+   ============================================================ */
+
 .hero-note {
     display: flex;
     align-items: flex-start;
@@ -168,15 +164,16 @@ p {
     border-radius: 4px 14px 14px 4px;
     padding: 17px 19px;
     margin: 1.5rem 0;
-    max-width: 570px;
-    font-size: 0.88rem;
-    line-height: 1.75;
+    max-width: 650px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.85;
     color: var(--text-secondary);
 }
 
 .hero-note .icon {
     color: var(--pink);
-    font-size: 1.15rem;
+    font-size: 1.4rem;
     flex-shrink: 0;
 }
 
@@ -184,38 +181,10 @@ p {
     color: var(--pink-dark);
 }
 
-/* ETIQUETAS */
-.chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 9px;
-    margin-top: 1.2rem;
-}
+/* ============================================================
+   RETRATO
+   ============================================================ */
 
-.chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 13px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: rgba(255,255,255,0.85);
-    color: var(--text-secondary);
-    font-size: 0.78rem;
-}
-
-.chip::before {
-    content: '✿';
-    color: var(--pink);
-    font-size: 0.75rem;
-}
-
-.chip strong {
-    color: var(--text);
-    font-weight: 700;
-}
-
-/* RETRATO */
 .st-key-portrait_card {
     background: var(--white) !important;
     border: 1px solid var(--border) !important;
@@ -249,10 +218,9 @@ p {
 .portrait-caption {
     text-align: center;
     margin-top: 1.2rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
     color: var(--muted);
 }
 
@@ -261,196 +229,227 @@ p {
     margin: 0 9px;
 }
 
-/* ENCABEZADOS DE SECCIÓN */
-.section-head {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding-bottom: 17px;
-    margin: 4.5rem 0 2rem 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.section-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 43px;
-    height: 39px;
-    padding: 0 8px;
-    border-radius: 11px;
-    background: var(--pink-soft);
-    color: var(--pink-dark);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 700;
-}
-
-.section-title {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 1.8rem !important;
-    margin: 0 !important;
-    color: var(--text) !important;
-    flex: 1;
-}
-
-.section-count {
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
 /* ============================================================
-   TARJETAS DE PROYECTOS — CORREGIDAS
+   TARJETAS HORIZONTALES DE PROYECTOS
    ============================================================ */
 
-/* Evita que los contenedores de Streamlit alteren las tarjetas */
-div[data-testid="stMarkdownContainer"] {
-    overflow-wrap: anywhere;
+.project-row {
+    display: flex;
+    align-items: stretch;
+    gap: 28px;
+    width: 100%;
+    margin: 0 0 38px 0;
 }
 
-.app-card,
-.app-card:link,
-.app-card:visited {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100%;
-    box-sizing: border-box !important;
-    background: var(--white) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 17px !important;
-    overflow: hidden !important;
-    color: var(--text) !important;
-    text-decoration: none !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-                border-color 0.3s ease;
-    margin: 0 !important;
-    padding: 0 !important;
-    white-space: normal !important;
-    overflow-wrap: normal !important;
+/* Alternancia de imagen y texto */
+
+.project-row.reverse {
+    flex-direction: row-reverse;
 }
 
-.app-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--pink-light) !important;
-    box-shadow: 0 16px 36px rgba(169,47,100,0.12);
-    color: var(--text) !important;
-    text-decoration: none !important;
+/* Área visual de la imagen */
+
+.project-image {
+    position: relative;
+    flex: 1 1 50%;
+    min-width: 0;
+    min-height: 290px;
+    aspect-ratio: 16 / 10;
+    background: #fff0f5;
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    overflow: hidden;
+    box-shadow: 0 10px 28px rgba(169,47,100,0.06);
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    transform-origin: center;
 }
 
-.app-thumb {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    position: relative !important;
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16 / 10 !important;
-    flex-shrink: 0 !important;
-    box-sizing: border-box !important;
-    background: #fff0f5 !important;
-    border-bottom: 1px solid var(--border);
-    overflow: hidden !important;
+/* Imagen dentro del contenedor */
+
+.project-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 290px;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.45s ease;
+    z-index: 1;
 }
 
-.app-thumb img {
-    display: block !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-    z-index: 1 !important;
-    transition: transform 0.4s ease;
-}
+/* Flor cuando no hay imagen */
 
-.app-card:hover .app-thumb img {
-    transform: scale(1.04);
-}
-
-.app-thumb::after {
+.project-image::after {
     content: '✿';
     position: absolute;
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--pink-light);
-    opacity: 0.9;
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 4rem;
+    opacity: 0.85;
+    pointer-events: none;
     z-index: 0;
 }
 
-.app-body {
-    display: flex !important;
-    flex-direction: column !important;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    padding: 22px !important;
-    background: var(--white) !important;
-    white-space: normal !important;
-    overflow-wrap: normal !important;
+/* Flor decorativa al pasar el cursor */
+
+.project-image::before {
+    content: '✿';
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    color: white;
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 2.5rem;
+    opacity: 0;
+    z-index: 2;
+    transform: scale(0.6) rotate(-25deg);
+    transition:
+        opacity 0.3s ease,
+        transform 0.4s ease;
+    text-shadow: 0 2px 12px rgba(169,47,100,0.25);
+    pointer-events: none;
 }
 
-.app-kicker {
+/* Animaciones */
+
+.project-row:hover .project-image {
+    transform: rotate(-1.2deg) translateY(-4px);
+    border-color: var(--pink-light);
+    box-shadow: 0 18px 36px rgba(169,47,100,0.13);
+}
+
+.project-row.reverse:hover .project-image {
+    transform: rotate(1.2deg) translateY(-4px);
+}
+
+.project-row:hover .project-image img {
+    transform: scale(1.035);
+}
+
+.project-row:hover .project-image::before {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+/* ============================================================
+   BURBUJA DE INFORMACIÓN
+   ============================================================ */
+
+.project-bubble {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1 1 50%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 34px 36px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 17px;
+    box-shadow: 0 10px 28px rgba(169,47,100,0.045);
+    position: relative;
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+
+/* Decoración de la burbuja */
+
+.project-bubble::before {
+    content: '✿';
+    position: absolute;
+    top: 17px;
+    right: 20px;
+    color: var(--pink-light);
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 1.6rem;
+    opacity: 0.8;
+}
+
+.project-row:hover .project-bubble {
+    border-color: var(--border-strong);
+    box-shadow: 0 14px 32px rgba(169,47,100,0.08);
+}
+
+/* Categoría */
+
+.project-kicker {
     display: block;
     font-family: 'Space Mono', monospace;
     font-size: 0.64rem;
+    line-height: 1.7;
     letter-spacing: 0.09em;
-    line-height: 1.6;
     text-transform: uppercase;
     color: var(--pink);
-    margin-bottom: 11px;
-    overflow-wrap: anywhere;
+    margin-bottom: 12px;
 }
 
-.app-title {
-    font-family: 'Playfair Display', serif !important;
-    font-size: 1.38rem !important;
-    line-height: 1.35 !important;
-    font-weight: 500 !important;
-    margin: 0 0 11px 0 !important;
-    padding: 0 !important;
+/* Títulos manuscritos */
+
+.project-title {
+    font-family: 'Delicious Handrawn', cursive !important;
+    font-size: 2.4rem !important;
+    line-height: 1.2 !important;
+    font-weight: 400 !important;
     color: var(--text) !important;
-    overflow-wrap: anywhere;
-}
-
-.app-desc {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.87rem;
-    line-height: 1.75;
-    color: var(--text-secondary);
-    margin: 0 0 22px 0 !important;
+    margin: 0 0 15px 0 !important;
     padding: 0 !important;
-    flex: 1 1 auto;
-    overflow-wrap: anywhere;
 }
 
-.app-link {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 9px;
-    margin-top: auto;
+/* Descripciones legibles */
+
+.project-desc {
+    font-family: 'Nunito', sans-serif !important;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    margin: 0 0 25px 0 !important;
+    padding: 0 !important;
+}
+
+/* Enlace del proyecto */
+
+.project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    align-self: flex-start;
     color: var(--pink-dark) !important;
     font-family: 'Space Mono', monospace;
     font-size: 0.68rem;
-    line-height: 1.6;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     font-weight: 700;
+    text-decoration: none !important;
     transition: gap 0.25s ease;
 }
 
-.app-card:hover .app-link {
-    gap: 15px;
+.project-link:hover {
+    gap: 16px;
 }
 
-/* PIE DE PÁGINA */
+/* Enlace del área de la imagen */
+
+.project-link-area {
+    display: contents;
+    color: inherit;
+    text-decoration: none !important;
+}
+
+/* ============================================================
+   PIE DE PÁGINA
+   ============================================================ */
+
 .footer {
     text-align: center;
     padding: 3rem 0 1rem;
@@ -461,15 +460,15 @@ div[data-testid="stMarkdownContainer"] {
 .footer-ornament {
     display: block;
     color: var(--pink);
-    font-size: 1.5rem;
+    font-family: 'Delicious Handrawn', cursive;
+    font-size: 2rem;
     letter-spacing: 0.65rem;
     margin-bottom: 1rem;
 }
 
 .footer-text {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.35rem;
-    font-style: italic;
+    font-family: 'Delicious Handrawn', cursive !important;
+    font-size: 2rem;
     color: var(--text);
     margin-bottom: 0.7rem;
 }
@@ -482,41 +481,13 @@ div[data-testid="stMarkdownContainer"] {
     color: var(--muted);
 }
 
-/* ENLACES Y BARRA DE DESPLAZAMIENTO */
-.stMarkdown a {
-    text-decoration: none !important;
-}
+/* ============================================================
+   RESPONSIVE — TABLET
+   ============================================================ */
 
-::-webkit-scrollbar {
-    width: 9px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--pink-light);
-    border-radius: 20px;
-    border: 2px solid var(--bg);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--pink);
-}
-
-/* DISEÑO ADAPTABLE */
 @media (max-width: 900px) {
     .hero-h1 {
-        font-size: 2.8rem !important;
-    }
-
-    .section-title {
-        font-size: 1.35rem !important;
-    }
-
-    .section-count {
-        display: none;
+        font-size: 3.8rem !important;
     }
 
     .st-key-portrait_card {
@@ -537,30 +508,92 @@ div[data-testid="stMarkdownContainer"] {
         padding-top: 1.5rem !important;
     }
 
-    .app-body {
-        padding: 18px !important;
+    .project-row,
+    .project-row.reverse {
+        gap: 18px;
+    }
+
+    .project-bubble {
+        padding: 24px;
+    }
+
+    .project-title {
+        font-size: 2rem !important;
+    }
+
+    .project-image,
+    .project-image img {
+        min-height: 250px;
     }
 }
 
-@media (max-width: 500px) {
+/* ============================================================
+   RESPONSIVE — MÓVIL
+   ============================================================ */
+
+@media (max-width: 650px) {
     .hero-h1 {
-        font-size: 2.4rem !important;
+        font-size: 3.2rem !important;
     }
 
-    .hero-desc {
-        font-size: 0.92rem;
+    .hero-note {
+        font-size: 0.88rem;
     }
 
-    .section-head {
-        gap: 10px;
+    .project-row,
+    .project-row.reverse {
+        flex-direction: column;
+        gap: 0;
+        margin-bottom: 32px;
     }
 
-    .section-title {
-        font-size: 1.2rem !important;
+    .project-image {
+        width: 100%;
+        min-height: 230px;
+        aspect-ratio: 16 / 10;
+        border-radius: 17px 17px 0 0;
     }
 
-    .app-body {
-        padding: 16px !important;
+    .project-image img {
+        min-height: 230px;
+    }
+
+    .project-bubble {
+        width: 100%;
+        padding: 25px 22px;
+        border-radius: 0 0 17px 17px;
+    }
+
+    .project-title {
+        font-size: 2rem !important;
+    }
+
+    .project-desc {
+        font-size: 0.9rem;
+    }
+
+    .project-row:hover .project-image,
+    .project-row.reverse:hover .project-image {
+        transform: translateY(-3px) rotate(-0.5deg);
+    }
+
+    .portrait-caption {
+        font-size: 1.25rem;
+    }
+
+    .footer-text {
+        font-size: 1.7rem;
+    }
+}
+
+/* Respeto por la configuración de movimiento del dispositivo */
+
+@media (prefers-reduced-motion: reduce) {
+    .project-image,
+    .project-image img,
+    .project-bubble,
+    .project-image::before {
+        transition: none !important;
     }
 }
 </style>
@@ -572,8 +605,12 @@ div[data-testid="stMarkdownContainer"] {
 # ============================================================
 
 def get_image_base64(path):
-    """Convierte una imagen local en Base64 para mostrarla en HTML."""
-    if os.path.exists(path):
+    """Convierte una imagen local en Base64 para usarla dentro del HTML."""
+
+    if not os.path.exists(path):
+        return ""
+
+    try:
         with open(path, "rb") as file:
             data = base64.b64encode(file.read()).decode("utf-8")
 
@@ -589,61 +626,64 @@ def get_image_base64(path):
         }
 
         mime_type = mime_types.get(extension, "image/png")
+
         return f"data:{mime_type};base64,{data}"
 
-    return ""
+    except OSError:
+        return ""
 
 
-def section_header(num, title, count):
-    """Crea el encabezado visual de cada categoría."""
-    st.markdown(
-        f"""
-        <div class="section-head">
-            <span class="section-num">{num}</span>
-            <h2 class="section-title">{html.escape(title)}</h2>
-            <span class="section-count">{html.escape(count)}</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+def project_card(number, kicker, title, desc, url, image_path, reverse=False):
+    """Genera una tarjeta horizontal con imagen y burbuja de texto."""
 
-
-def app_card(kicker, title, desc, url, image_path):
-    """Construye una tarjeta visual con imagen y enlace."""
-
+    safe_number = html.escape(str(number))
     safe_kicker = html.escape(kicker)
     safe_title = html.escape(title)
     safe_desc = html.escape(desc)
     safe_url = html.escape(url, quote=True)
 
-    b64_img = get_image_base64(image_path)
+    image_data = get_image_base64(image_path)
 
-    if b64_img:
-        img_tag = (
-            f'<img src="{b64_img}" alt="{safe_title}" '
-            f'loading="lazy">'
+    if image_data:
+        image_html = (
+            f'<img src="{image_data}" alt="{safe_title}" loading="lazy">'
         )
     else:
-        img_tag = ""
+        image_html = ""
 
-    # HTML sin indentación inicial para evitar problemas de renderizado.
-    return (
-        f'<a href="{safe_url}" target="_blank" '
-        f'rel="noopener noreferrer" class="app-card">'
-        f'<div class="app-thumb">{img_tag}</div>'
-        f'<div class="app-body">'
-        f'<span class="app-kicker">{safe_kicker}</span>'
-        f'<h3 class="app-title">{safe_title}</h3>'
-        f'<p class="app-desc">{safe_desc}</p>'
-        f'<span class="app-link">Explorar proyecto <span>↗</span></span>'
-        f'</div>'
-        f'</a>'
-    )
+    reverse_class = " reverse" if reverse else ""
 
+    card_html = f"""
+    <div class="project-row{reverse_class}">
+        <a class="project-link-area"
+           href="{safe_url}"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Abrir proyecto: {safe_title}">
+            <div class="project-image">
+                {image_html}
+            </div>
+        </a>
 
-def render_app_card(kicker, title, desc, url, image_path):
-    """Renderiza la tarjeta como HTML, sin convertirla en código."""
-    card_html = app_card(kicker, title, desc, url, image_path)
+        <div class="project-bubble">
+            <span class="project-kicker">
+                Proyecto {safe_number} · {safe_kicker}
+            </span>
+
+            <h3 class="project-title">{safe_title}</h3>
+
+            <p class="project-desc">{safe_desc}</p>
+
+            <a class="project-link"
+               href="{safe_url}"
+               target="_blank"
+               rel="noopener noreferrer">
+                Explorar proyecto <span>↗</span>
+            </a>
+        </div>
+    </div>
+    """
+
     st.markdown(card_html, unsafe_allow_html=True)
 
 
@@ -673,6 +713,7 @@ with col_left:
                     justify-content:center;
                     font-size:5rem;
                     color:#d94f87;
+                    font-family:'Delicious Handrawn',cursive;
                 ">
                     ✿
                 </div>
@@ -709,25 +750,14 @@ with col_right:
             <em>Salomé Arango.</em>
         </h1>
 
-        <p class="hero-desc">
-            Soy estudiante de <strong>Diseño Interactivo</strong>
-            en <strong>EAFIT</strong>, interesada en explorar nuevas
-            formas de conectar a las personas con la tecnología.
-            En esta segunda entrega de mi portafolio de
-            <strong>Interfaces Multimodales</strong>, presento una
-            selección de los trabajos desarrollados durante el
-            semestre, desde experiencias basadas en inteligencia
-            artificial hasta propuestas que integran dispositivos
-            físicos y visión por computadora.
-        </p>
-
         <div class="hero-note">
             <span class="icon">✿</span>
             <span>
-                Una recopilación de experimentos, aprendizajes y
-                soluciones interactivas que exploran cómo el lenguaje,
-                las imágenes, el tacto y otros medios pueden ampliar
-                nuestra manera de interactuar con los sistemas digitales.
+                Una recopilación que hemos desarrollado en la clase de
+                <b>Interfaces Multimodales</b>, donde experimentamos cómo
+                conectar la tecnología con el mundo físico, cómo usar la
+                inteligencia artificial como apoyo para estas interfaces
+                y cómo desarrollar interfaces táctiles.
             </span>
         </div>
         """,
@@ -735,126 +765,112 @@ with col_right:
     )
 
 
-st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+st.markdown(
+    "<div style='height: 1.5rem;'></div>",
+    unsafe_allow_html=True,
+)
 
 
 # ============================================================
-# SECCIÓN 01 — INTELIGENCIA ARTIFICIAL Y LENGUAJE NATURAL
+# PORTAFOLIO — TODOS LOS PROYECTOS
 # ============================================================
 
-section_header("01", "Lenguaje e inteligencia artificial", "2 proyectos")
+project_card(
+    1,
+    "Procesamiento de texto",
+    "ChatPDF",
+    "Una exploración de cómo los sistemas de inteligencia artificial "
+    "analizan, comprenden y producen contenido en lenguaje natural.",
+    "https://chatpdf-19.streamlit.app/",
+    "imagen.avif",
+    reverse=False,
+)
 
-c1, c2 = st.columns(2, gap="medium")
+project_card(
+    2,
+    "Análisis de imágenes",
+    "Procesamiento de imágenes",
+    "Una aplicación que explora el reconocimiento visual mediante "
+    "modelos capaces de interpretar imágenes y encontrar patrones.",
+    "https://vision-app1.streamlit.app/",
+    "ojotecnologico.webp",
+    reverse=True,
+)
 
-with c1:
-    render_app_card(
-        "Procesamiento de texto",
-        "ChatPDF",
-        "Una exploración de cómo los sistemas de inteligencia artificial "
-        "analizan, comprenden y producen contenido en lenguaje natural.",
-        "https://chatpdf-19.streamlit.app/",
-        "imagen.avif",
-    )
+project_card(
+    3,
+    "Predicciones de números",
+    "Tablero inteligente",
+    "Un espacio de aula de clase donde la inteligencia artificial "
+    "predice el número escrito en el tablero.",
+    "https://prediccion-numeros.streamlit.app/",
+    "numeros.jpg",
+    reverse=False,
+)
 
-with c2:
-    render_app_card(
-        "Análisis de imágenes",
-        "Procesamiento de imágenes",
-        "Una aplicación que explora el reconocimiento visual mediante "
-        "modelos capaces de interpretar imágenes y encontrar patrones.",
-        "https://vision-app1.streamlit.app/",
-        "ojotecnologico.webp",
-    )
+project_card(
+    4,
+    "Dibujo",
+    "Diseño de modas digital",
+    "Diseña prendas únicas a tu estilo y para todos.",
+    "https://tablerodemodas.streamlit.app/",
+    "moda.png",
+    reverse=True,
+)
 
+project_card(
+    5,
+    "Visión + ChatGPT",
+    "Tablero inteligente",
+    "Dibuja lo que te imagines y la inteligencia artificial lo interpretará.",
+    "https://tablerointeligente.streamlit.app/",
+    "analisisia.jpg",
+    reverse=False,
+)
 
-# ============================================================
-# SECCIÓN 02 — EXPERIENCIAS TÁCTILES
-# ============================================================
+project_card(
+    6,
+    "Dibujo · Creatividad",
+    "Lienzo interactivo",
+    "Un lienzo donde puedes plasmar tus ideas y la inteligencia artificial "
+    "se encarga de crear una imagen con un estilo artístico.",
+    "https://tableroartistico.streamlit.app/",
+    "arte.jfif",
+    reverse=True,
+)
 
-section_header("02", "Experiencias de interacción táctil", "4 proyectos")
+project_card(
+    7,
+    "Voz · Accesibilidad",
+    "Control por voz",
+    "Una experiencia de interacción que permite dar instrucciones por voz "
+    "y enviar la información a Wokwi.",
+    "https://control-devoz.streamlit.app/",
+    "voz.jpg",
+    reverse=False,
+)
 
-# Fila 1
-c1, c2 = st.columns(2, gap="medium")
+project_card(
+    8,
+    "Sensores · MQTT",
+    "De Wokwi a Streamlit",
+    "Un sensor simulado transmite información a una interfaz digital "
+    "mediante el protocolo de comunicación MQTT.",
+    "https://receptorwokwi.streamlit.app/",
+    "MQTT.jpg",
+    reverse=True,
+)
 
-with c1:
-    render_app_card(
-        "Predicciones de números",
-        "Tablero inteligente",
-        "Un espacio de aula de clase donde la IA predice el número "
-        "escrito en el tablero.",
-        "https://prediccion-numeros.streamlit.app/",
-        "numeros.jpg",
-    )
-
-with c2:
-    render_app_card(
-        "Dibujo",
-        "Diseño de modas digital",
-        "Diseña prendas únicas a tu estilo y para todos.",
-        "https://tablerodemodas.streamlit.app/",
-        "moda.png",
-    )
-
-# Fila 2
-c1, c2 = st.columns(2, gap="medium")
-
-with c1:
-    render_app_card(
-        "Visión + ChatGPT",
-        "Tablero inteligente",
-        "Dibuja lo que te imagines y la IA lo interpretará.",
-        "https://tablerointeligente.streamlit.app/",
-        "analisisia.jpg",
-    )
-
-with c2:
-    render_app_card(
-        "Dibujo · Creatividad",
-        "Lienzo interactivo",
-        "Un lienzo donde puedes plasmar tus ideas y la IA se encarga "
-        "de crear una imagen con un estilo artístico.",
-        "https://tableroartistico.streamlit.app/",
-        "arte.jfif",
-    )
-
-
-# ============================================================
-# SECCIÓN 03 — INTERNET DE LAS COSAS
-# ============================================================
-
-section_header("03", "Conexiones entre dispositivos", "3 proyectos")
-
-c1, c2, c3 = st.columns(3, gap="medium")
-
-with c1:
-    render_app_card(
-        "Voz · Accesibilidad",
-        "Control por voz",
-        "Una experiencia de interacción que permite dar instrucciones "
-        "por voz y enviar la información a Wokwi.",
-        "https://control-devoz.streamlit.app/",
-        "voz.jpg",
-    )
-
-with c2:
-    render_app_card(
-        "Sensores · MQTT",
-        "De Wokwi a Streamlit",
-        "Un sensor simulado transmite información a una interfaz "
-        "digital mediante el protocolo de comunicación MQTT.",
-        "https://receptorwokwi.streamlit.app/",
-        "MQTT.jpg",
-    )
-
-with c3:
-    render_app_card(
-        "Automatización · MQTT",
-        "De Streamlit a Wokwi",
-        "Una interfaz permite enviar instrucciones y controlar "
-        "dispositivos simulados a través de una conexión MQTT.",
-        "https://enviarwokwi.streamlit.app/",
-        "mqtt.jfif",
-    )
+project_card(
+    9,
+    "Automatización · MQTT",
+    "De Streamlit a Wokwi",
+    "Una interfaz permite enviar instrucciones y controlar dispositivos "
+    "simulados a través de una conexión MQTT.",
+    "https://enviarwokwi.streamlit.app/",
+    "mqtt.jfif",
+    reverse=False,
+)
 
 
 # ============================================================
@@ -877,3 +893,4 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+```
