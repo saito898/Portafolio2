@@ -1,4 +1,4 @@
-```python
+
 import streamlit as st
 import base64
 import os
@@ -893,4 +893,4 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-```
+
