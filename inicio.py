@@ -19,7 +19,7 @@ st.set_page_config(
 # ============================================================
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=DM+Sans:wght@300;400;500;600;700&family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Delicious+Handrawn&family=Nunito:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
 
 :root {
     --bg: #fff9fb;
@@ -35,15 +35,10 @@ st.markdown("""
     --text: #38232e;
     --text-secondary: #755663;
     --muted: #9c7c8a;
-    --green: #628d76;
 }
 
-/* ============================================================
-   TIPOGRAFÍA GENERAL
-   ============================================================ */
-
-html, body, [class*="css"], .stApp,
-button, input, textarea, select {
+html, body, .stApp,
+[data-testid="stAppViewContainer"] {
     font-family: 'Nunito', sans-serif !important;
 }
 
@@ -71,18 +66,31 @@ header[data-testid="stHeader"] {
 }
 
 /* ============================================================
-   TÍTULOS CON DELICIOUS HANDRAWN
+   TIPOGRAFÍA
    ============================================================ */
 
-h1, h2, h3, h4, h5 {
+.hero-h1,
+.hero-h1 em,
+.project-title,
+.portrait-caption,
+.footer-text,
+.footer-ornament {
     font-family: 'Delicious Handrawn', cursive !important;
-    color: var(--text) !important;
     font-weight: 400 !important;
 }
 
-/* ============================================================
-   PRESENTACIÓN PRINCIPAL
-   ============================================================ */
+.hero-h1 {
+    font-size: 5rem !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+    margin: 0 0 1.5rem 0 !important;
+    color: var(--text) !important;
+}
+
+.hero-h1 em {
+    color: var(--pink);
+    font-style: normal;
+}
 
 .hero-kicker {
     display: inline-flex;
@@ -102,23 +110,6 @@ h1, h2, h3, h4, h5 {
     width: 28px;
     height: 2px;
     background: var(--pink);
-}
-
-.hero-h1 {
-    font-family: 'Delicious Handrawn', cursive !important;
-    font-size: 5rem !important;
-    line-height: 1.12 !important;
-    font-weight: 400 !important;
-    letter-spacing: 0 !important;
-    margin: 0 0 1.5rem 0 !important;
-    color: var(--text) !important;
-}
-
-.hero-h1 em {
-    color: var(--pink);
-    font-family: 'Delicious Handrawn', cursive !important;
-    font-weight: 400;
-    font-style: normal;
 }
 
 .part-badge {
@@ -151,7 +142,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ============================================================
-   NOTA DESTACADA
+   NOTA PRINCIPAL
    ============================================================ */
 
 .hero-note {
@@ -218,9 +209,7 @@ h1, h2, h3, h4, h5 {
 .portrait-caption {
     text-align: center;
     margin-top: 1.2rem;
-    font-family: 'Delicious Handrawn', cursive;
     font-size: 1.4rem;
-    letter-spacing: 0.02em;
     color: var(--muted);
 }
 
@@ -230,7 +219,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ============================================================
-   TARJETAS HORIZONTALES DE PROYECTOS
+   TARJETAS DE PROYECTOS
    ============================================================ */
 
 .project-row {
@@ -241,20 +230,30 @@ h1, h2, h3, h4, h5 {
     margin: 0 0 38px 0;
 }
 
-/* Alternancia de imagen y texto */
-
 .project-row.reverse {
     flex-direction: row-reverse;
 }
 
-/* Área visual de la imagen */
+/* Enlace que contiene la imagen */
+
+.project-link-area {
+    display: block;
+    flex: 1 1 50%;
+    min-width: 0;
+    align-self: stretch;
+    color: inherit;
+    text-decoration: none !important;
+}
+
+/* Imagen */
 
 .project-image {
     position: relative;
-    flex: 1 1 50%;
-    min-width: 0;
+    width: 100%;
+    height: 100%;
     min-height: 290px;
     aspect-ratio: 16 / 10;
+    box-sizing: border-box;
     background: #fff0f5;
     border: 1px solid var(--border);
     border-radius: 17px;
@@ -266,8 +265,6 @@ h1, h2, h3, h4, h5 {
         border-color 0.35s ease;
     transform-origin: center;
 }
-
-/* Imagen dentro del contenedor */
 
 .project-image img {
     display: block;
@@ -282,7 +279,7 @@ h1, h2, h3, h4, h5 {
     z-index: 1;
 }
 
-/* Flor cuando no hay imagen */
+/* Decoración floral */
 
 .project-image::after {
     content: '✿';
@@ -299,8 +296,6 @@ h1, h2, h3, h4, h5 {
     z-index: 0;
 }
 
-/* Flor decorativa al pasar el cursor */
-
 .project-image::before {
     content: '✿';
     position: absolute;
@@ -312,14 +307,10 @@ h1, h2, h3, h4, h5 {
     opacity: 0;
     z-index: 2;
     transform: scale(0.6) rotate(-25deg);
-    transition:
-        opacity 0.3s ease,
-        transform 0.4s ease;
+    transition: opacity 0.3s ease, transform 0.4s ease;
     text-shadow: 0 2px 12px rgba(169,47,100,0.25);
     pointer-events: none;
 }
-
-/* Animaciones */
 
 .project-row:hover .project-image {
     transform: rotate(-1.2deg) translateY(-4px);
@@ -340,9 +331,7 @@ h1, h2, h3, h4, h5 {
     transform: scale(1) rotate(0deg);
 }
 
-/* ============================================================
-   BURBUJA DE INFORMACIÓN
-   ============================================================ */
+/* Burbuja de texto */
 
 .project-bubble {
     display: flex;
@@ -357,13 +346,8 @@ h1, h2, h3, h4, h5 {
     border-radius: 17px;
     box-shadow: 0 10px 28px rgba(169,47,100,0.045);
     position: relative;
-    transition:
-        transform 0.35s ease,
-        box-shadow 0.35s ease,
-        border-color 0.35s ease;
+    transition: box-shadow 0.35s ease, border-color 0.35s ease;
 }
-
-/* Decoración de la burbuja */
 
 .project-bubble::before {
     content: '✿';
@@ -381,8 +365,6 @@ h1, h2, h3, h4, h5 {
     box-shadow: 0 14px 32px rgba(169,47,100,0.08);
 }
 
-/* Categoría */
-
 .project-kicker {
     display: block;
     font-family: 'Space Mono', monospace;
@@ -394,19 +376,14 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 12px;
 }
 
-/* Títulos manuscritos */
-
 .project-title {
-    font-family: 'Delicious Handrawn', cursive !important;
     font-size: 2.4rem !important;
     line-height: 1.2 !important;
-    font-weight: 400 !important;
     color: var(--text) !important;
     margin: 0 0 15px 0 !important;
     padding: 0 !important;
+    overflow-wrap: anywhere;
 }
-
-/* Descripciones legibles */
 
 .project-desc {
     font-family: 'Nunito', sans-serif !important;
@@ -416,8 +393,6 @@ h1, h2, h3, h4, h5 {
     margin: 0 0 25px 0 !important;
     padding: 0 !important;
 }
-
-/* Enlace del proyecto */
 
 .project-link {
     display: inline-flex;
@@ -438,14 +413,6 @@ h1, h2, h3, h4, h5 {
     gap: 16px;
 }
 
-/* Enlace del área de la imagen */
-
-.project-link-area {
-    display: contents;
-    color: inherit;
-    text-decoration: none !important;
-}
-
 /* ============================================================
    PIE DE PÁGINA
    ============================================================ */
@@ -460,14 +427,12 @@ h1, h2, h3, h4, h5 {
 .footer-ornament {
     display: block;
     color: var(--pink);
-    font-family: 'Delicious Handrawn', cursive;
     font-size: 2rem;
     letter-spacing: 0.65rem;
     margin-bottom: 1rem;
 }
 
 .footer-text {
-    font-family: 'Delicious Handrawn', cursive !important;
     font-size: 2rem;
     color: var(--text);
     margin-bottom: 0.7rem;
@@ -482,7 +447,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ============================================================
-   RESPONSIVE — TABLET
+   TABLET
    ============================================================ */
 
 @media (max-width: 900px) {
@@ -508,8 +473,7 @@ h1, h2, h3, h4, h5 {
         padding-top: 1.5rem !important;
     }
 
-    .project-row,
-    .project-row.reverse {
+    .project-row {
         gap: 18px;
     }
 
@@ -528,7 +492,7 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ============================================================
-   RESPONSIVE — MÓVIL
+   MÓVIL
    ============================================================ */
 
 @media (max-width: 650px) {
@@ -547,8 +511,14 @@ h1, h2, h3, h4, h5 {
         margin-bottom: 32px;
     }
 
+    .project-link-area {
+        flex: none;
+        width: 100%;
+    }
+
     .project-image {
         width: 100%;
+        height: auto;
         min-height: 230px;
         aspect-ratio: 16 / 10;
         border-radius: 17px 17px 0 0;
@@ -560,6 +530,7 @@ h1, h2, h3, h4, h5 {
 
     .project-bubble {
         width: 100%;
+        flex: none;
         padding: 25px 22px;
         border-radius: 0 0 17px 17px;
     }
@@ -586,8 +557,6 @@ h1, h2, h3, h4, h5 {
     }
 }
 
-/* Respeto por la configuración de movimiento del dispositivo */
-
 @media (prefers-reduced-motion: reduce) {
     .project-image,
     .project-image img,
@@ -605,7 +574,7 @@ h1, h2, h3, h4, h5 {
 # ============================================================
 
 def get_image_base64(path):
-    """Convierte una imagen local en Base64 para usarla dentro del HTML."""
+    """Convierte una imagen local en Base64."""
 
     if not os.path.exists(path):
         return ""
@@ -626,7 +595,6 @@ def get_image_base64(path):
         }
 
         mime_type = mime_types.get(extension, "image/png")
-
         return f"data:{mime_type};base64,{data}"
 
     except OSError:
@@ -634,7 +602,7 @@ def get_image_base64(path):
 
 
 def project_card(number, kicker, title, desc, url, image_path, reverse=False):
-    """Genera una tarjeta horizontal con imagen y burbuja de texto."""
+    """Renderiza una tarjeta HTML real con imagen y texto."""
 
     safe_number = html.escape(str(number))
     safe_kicker = html.escape(kicker)
@@ -684,7 +652,8 @@ def project_card(number, kicker, title, desc, url, image_path, reverse=False):
     </div>
     """
 
-    st.markdown(card_html, unsafe_allow_html=True)
+    # IMPORTANTE: st.html renderiza el HTML como contenido visual.
+    st.html(card_html)
 
 
 # ============================================================
@@ -772,7 +741,7 @@ st.markdown(
 
 
 # ============================================================
-# PORTAFOLIO — TODOS LOS PROYECTOS
+# PORTAFOLIO — NUEVE PROYECTOS
 # ============================================================
 
 project_card(
@@ -893,4 +862,3 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
