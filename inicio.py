@@ -713,20 +713,6 @@ with col_right:
                 nuestra manera de interactuar con los sistemas digitales.
             </span>
         </div>
-
-        <div class="chips">
-            <span class="chip">
-                <strong>EAFIT</strong> Diseño Interactivo
-            </span>
-
-            <span class="chip">
-                <strong>Medellín</strong> Colombia
-            </span>
-
-            <span class="chip">
-                <strong>2026</strong> Interfaces Multimodales
-            </span>
-        </div>
         """,
         unsafe_allow_html=True,
     )
