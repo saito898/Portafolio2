@@ -764,7 +764,7 @@ with col_right:
         <div class="hero-note">
             <span class="icon">✿</span>
             <span>
-                Una recopilación que hemos desarrollado en la clase de
+                Una recopilación de lo que hemos desarrollado en la clase de
                 <b>Interfaces Multimodales</b>, donde experimentamos cómo
                 conectar la tecnología con el mundo físico, cómo usar la
                 inteligencia artificial como apoyo para estas interfaces
