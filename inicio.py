@@ -888,7 +888,7 @@ project_card(
 # PIE DE PÁGINA
 # ============================================================
 
-st.markdown(
+st.html(
     """
     <div class="footer">
         <span class="footer-ornament">✿ ♡ ✿</span>
@@ -902,5 +902,4 @@ st.markdown(
         </p>
     </div>
     """,
-    unsafe_allow_html=True,
 )
