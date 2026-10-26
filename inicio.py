@@ -37,6 +37,10 @@ st.markdown("""
     --muted: #9c7c8a;
 }
 
+/* ============================================================
+   ESTILO GENERAL
+   ============================================================ */
+
 html, body, .stApp,
 [data-testid="stAppViewContainer"] {
     font-family: 'Nunito', sans-serif !important;
@@ -245,7 +249,7 @@ header[data-testid="stHeader"] {
     text-decoration: none !important;
 }
 
-/* Imagen */
+/* Contenedor de la imagen */
 
 .project-image {
     position: relative;
@@ -258,6 +262,7 @@ header[data-testid="stHeader"] {
     border: 1px solid var(--border);
     border-radius: 17px;
     overflow: hidden;
+    isolation: isolate;
     box-shadow: 0 10px 28px rgba(169,47,100,0.06);
     transition:
         transform 0.35s ease,
@@ -265,6 +270,8 @@ header[data-testid="stHeader"] {
         border-color 0.35s ease;
     transform-origin: center;
 }
+
+/* Imagen original: siempre visible */
 
 .project-image img {
     display: block;
@@ -279,59 +286,85 @@ header[data-testid="stHeader"] {
     z-index: 1;
 }
 
-/* Decoración floral */
+/* ============================================================
+   HOVER ROSADO TRANSPARENTE
+   La imagen sigue siendo visible debajo de la capa.
+   ============================================================ */
 
 .project-image::after {
-    content: '✿';
+    content: '';
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--pink-light);
-    font-family: 'Delicious Handrawn', cursive;
-    font-size: 4rem;
-    opacity: 0.85;
+    background: rgba(217, 79, 135, 0.34);
+    opacity: 0;
+    transition: opacity 0.35s ease;
     pointer-events: none;
-    z-index: 0;
+    z-index: 2;
 }
+
+/* ============================================================
+   FLOR CENTRAL ROSA OSCURO
+   ============================================================ */
 
 .project-image::before {
     content: '✿';
     position: absolute;
-    right: 20px;
-    top: 12px;
-    color: white;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    color: #a92f64;
     font-family: 'Delicious Handrawn', cursive;
-    font-size: 2.5rem;
+    font-size: clamp(4rem, 7vw, 6rem);
+    line-height: 1;
     opacity: 0;
-    z-index: 2;
-    transform: scale(0.6) rotate(-25deg);
-    transition: opacity 0.3s ease, transform 0.4s ease;
-    text-shadow: 0 2px 12px rgba(169,47,100,0.25);
+    z-index: 3;
     pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.55) rotate(-25deg);
+    transform-origin: center;
+    transition:
+        opacity 0.3s ease,
+        transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    text-shadow:
+        0 2px 0 rgba(255,255,255,0.4),
+        0 5px 20px rgba(112,22,63,0.18);
 }
+
+/* Al pasar el cursor, aparece la capa rosa */
+
+.project-row:hover .project-image::after,
+.project-link-area:focus-visible .project-image::after {
+    opacity: 1;
+}
+
+/* La flor aparece en el centro */
+
+.project-row:hover .project-image::before,
+.project-link-area:focus-visible .project-image::before {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Inclinación suave de las imágenes */
 
 .project-row:hover .project-image {
     transform: rotate(-1.2deg) translateY(-4px);
     border-color: var(--pink-light);
-    box-shadow: 0 18px 36px rgba(169,47,100,0.13);
+    box-shadow: 0 18px 36px rgba(169,47,100,0.16);
 }
 
 .project-row.reverse:hover .project-image {
     transform: rotate(1.2deg) translateY(-4px);
 }
 
+/* Zoom sutil de la imagen */
+
 .project-row:hover .project-image img {
-    transform: scale(1.035);
+    transform: scale(1.045);
 }
 
-.project-row:hover .project-image::before {
-    opacity: 1;
-    transform: scale(1) rotate(0deg);
-}
-
-/* Burbuja de texto */
+/* ============================================================
+   BURBUJA DE TEXTO
+   ============================================================ */
 
 .project-bubble {
     display: flex;
@@ -346,7 +379,9 @@ header[data-testid="stHeader"] {
     border-radius: 17px;
     box-shadow: 0 10px 28px rgba(169,47,100,0.045);
     position: relative;
-    transition: box-shadow 0.35s ease, border-color 0.35s ease;
+    transition:
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
 }
 
 .project-bubble::before {
@@ -365,6 +400,8 @@ header[data-testid="stHeader"] {
     box-shadow: 0 14px 32px rgba(169,47,100,0.08);
 }
 
+/* Categoría */
+
 .project-kicker {
     display: block;
     font-family: 'Space Mono', monospace;
@@ -376,6 +413,8 @@ header[data-testid="stHeader"] {
     margin-bottom: 12px;
 }
 
+/* Títulos manuscritos */
+
 .project-title {
     font-size: 2.4rem !important;
     line-height: 1.2 !important;
@@ -385,6 +424,8 @@ header[data-testid="stHeader"] {
     overflow-wrap: anywhere;
 }
 
+/* Descripciones */
+
 .project-desc {
     font-family: 'Nunito', sans-serif !important;
     font-size: 0.95rem;
@@ -393,6 +434,8 @@ header[data-testid="stHeader"] {
     margin: 0 0 25px 0 !important;
     padding: 0 !important;
 }
+
+/* Enlaces */
 
 .project-link {
     display: inline-flex;
@@ -543,11 +586,6 @@ header[data-testid="stHeader"] {
         font-size: 0.9rem;
     }
 
-    .project-row:hover .project-image,
-    .project-row.reverse:hover .project-image {
-        transform: translateY(-3px) rotate(-0.5deg);
-    }
-
     .portrait-caption {
         font-size: 1.25rem;
     }
@@ -557,11 +595,16 @@ header[data-testid="stHeader"] {
     }
 }
 
+/* ============================================================
+   ACCESIBILIDAD: REDUCIR ANIMACIONES
+   ============================================================ */
+
 @media (prefers-reduced-motion: reduce) {
     .project-image,
     .project-image img,
     .project-bubble,
-    .project-image::before {
+    .project-image::before,
+    .project-image::after {
         transition: none !important;
     }
 }
@@ -602,7 +645,7 @@ def get_image_base64(path):
 
 
 def project_card(number, kicker, title, desc, url, image_path, reverse=False):
-    """Renderiza una tarjeta HTML real con imagen y texto."""
+    """Renderiza una tarjeta HTML con imagen, hover y texto."""
 
     safe_number = html.escape(str(number))
     safe_kicker = html.escape(kicker)
@@ -652,7 +695,6 @@ def project_card(number, kicker, title, desc, url, image_path, reverse=False):
     </div>
     """
 
-    # IMPORTANTE: st.html renderiza el HTML como contenido visual.
     st.html(card_html)
 
 
